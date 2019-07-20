@@ -1,0 +1,9 @@
+# Folders
+.idea/
+/node_modules
+/build
+/coverage
+
+# Files
+*.iml
+package-lock.json
