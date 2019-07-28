@@ -13,7 +13,7 @@ import routes from './routes';
 const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);
 
-serviceWorker.unregister();
+serviceWorker.register();
 
 const component = (
     <Provider store={store}>
