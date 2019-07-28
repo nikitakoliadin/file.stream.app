@@ -21,6 +21,7 @@
     border: 5px dashed #aaaaaa;
     border-radius: 75px;
     transition: 0.5s;
+    cursor: pointer;
 }
 
 .Main .Dropzone:hover {
