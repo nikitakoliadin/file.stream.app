@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 
 import {onDropFiles} from '../../actions/fileActions';
 import Main from './Main';
+import Preloader from '../Preloader/Preloader';
 
 class MainContainer extends Component {
 
@@ -12,17 +13,27 @@ class MainContainer extends Component {
         return <Main onDropFiles={onDropFiles}/>
     }
 
+    getPreloaderComponent() {
+        const {preloader} = this.props;
+        if (preloader.showPreloader) {
+            return <Preloader/>
+        }
+    }
+
     render() {
         return (
             <div id={"MainContainer"}>
                 {this.getMainComponent()}
+                {this.getPreloaderComponent()}
             </div>
         );
     }
 }
 
 function mapStateToProps(state) {
-    return {};
+    return {
+        preloader: state.preloader
+    };
 }
 
 function matchDispatchToProps(dispatch) {
