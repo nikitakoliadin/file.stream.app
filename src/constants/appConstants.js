@@ -1,0 +1,1 @@
+export const FILE_STREAM_CHUNK_SIZE = 10485760;
