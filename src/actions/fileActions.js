@@ -15,7 +15,7 @@ export const onDropFiles = (acceptedFiles, rejectedFiles) => dispatch => {
                 file,
                 readTypes.AS_TEXT,
                 file => {
-                    console.log("File is loaded:", file);
+                    dispatch(fileIsLoaded(file));
                     if (index === acceptedFiles.length - 1) {
                         dispatch(finishFilesProcessing());
                         dispatch(finishPreloader());
@@ -37,6 +37,13 @@ const startFilesProcessing = files => {
     return {
         type: types.START_FILES_PROCESSING_TYPE,
         payload: files
+    }
+};
+
+const fileIsLoaded = file => {
+    return {
+        type: types.FILE_IS_LOADED_TYPE,
+        payload: file
     }
 };
 
