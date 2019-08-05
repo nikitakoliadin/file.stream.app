@@ -56,17 +56,18 @@ class FileStreamReader {
     #stop;
     #step;
     #typeOfReading;
+    #fileReader;
 
     constructor(start, stop, step, typeOfReading) {
         this.#start = start;
         this.#stop = stop;
         this.#step = step;
         this.#typeOfReading = typeOfReading;
+        this.#fileReader = new FileReader();
     }
 
     read(file, onLoadFileCallback, onLoadChunkCallback) {
-        const fileReader = new FileReader();
-        fileReader.onloadend = (event) => {
+        this.#fileReader.onloadend = event => {
             if (this.#start >= file.size) {
                 if (onLoadFileCallback) {
                     onLoadFileCallback(file);
@@ -80,6 +81,6 @@ class FileStreamReader {
             this.#stop += this.#step;
             this.read(file, onLoadFileCallback, onLoadChunkCallback);
         };
-        fileReader[this.#typeOfReading](file.slice(this.#start, this.#stop));
+        this.#fileReader[this.#typeOfReading](file.slice(this.#start, this.#stop));
     }
 }
