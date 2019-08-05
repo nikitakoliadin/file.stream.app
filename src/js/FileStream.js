@@ -13,7 +13,7 @@ export class FileStream {
         this.#chunkSize = chunkSize;
     }
 
-    read(file, typeOfReading, onLoadFileCallback, onLoadChunkCallback) {
+    readAsync(file, typeOfReading, onLoadFileCallback, onLoadChunkCallback) {
         if (!this.#chunkSize) {
             throw new FileStreamException("Chunk size should exists and not be equals to zero!");
         }
@@ -32,8 +32,8 @@ export class FileStream {
         const start = 0;
         const stop = this.#chunkSize;
         const step = this.#chunkSize;
-        const fileStreamReader = new FileStreamReader(start, stop, step, typeOfReading);
-        fileStreamReader.read(file, onLoadFileCallback, onLoadChunkCallback);
+        const fileStreamReaderAsync = new FileStreamReaderAsync(start, stop, step, typeOfReading);
+        fileStreamReaderAsync.read(file, onLoadFileCallback, onLoadChunkCallback);
     }
 }
 
@@ -50,7 +50,7 @@ class FileStreamException {
     }
 }
 
-class FileStreamReader {
+class FileStreamReaderAsync {
 
     #start;
     #stop;

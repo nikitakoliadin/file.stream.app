@@ -11,7 +11,7 @@ export const onDropFiles = (acceptedFiles, rejectedFiles) => dispatch => {
         acceptedFiles.forEach((file, index) => {
             if (index !== acceptedFiles.length - 1) {
                 const fileStream = new FileStream(appConstants.TEN_MEGABYTES);
-                fileStream.read(
+                fileStream.readAsync(
                     file,
                     readTypes.AS_TEXT,
                     file => {
@@ -23,7 +23,7 @@ export const onDropFiles = (acceptedFiles, rejectedFiles) => dispatch => {
                 );
             } else {
                 const fileStream = new FileStream(appConstants.TEN_MEGABYTES);
-                fileStream.read(
+                fileStream.readAsync(
                     file,
                     readTypes.AS_TEXT,
                     file => {
