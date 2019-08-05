@@ -35,6 +35,20 @@ export class FileStream {
         const fileStreamReaderAsync = new FileStreamReaderAsync(start, stop, step, typeOfReading);
         fileStreamReaderAsync.read(file, onLoadFileCallback, onLoadChunkCallback);
     }
+
+    readAsyncPromise(file, typeOfReading, onLoadFileCallback, onLoadChunkCallback) {
+        const params = {
+            chunkSize: this.#chunkSize,
+            file,
+            typeOfReading,
+            onLoadFileCallback,
+            onLoadChunkCallback
+        };
+        const fileStreamReaderAsyncPromise = new FileStreamReaderAsyncPromise();
+        return fileStreamReaderAsyncPromise
+            .validate(params)
+            .then(params => fileStreamReaderAsyncPromise.read(params));
+    }
 }
 
 class FileStreamException {
@@ -82,5 +96,52 @@ class FileStreamReaderAsync {
             this.read(file, onLoadFileCallback, onLoadChunkCallback);
         };
         this.#fileReader[this.#typeOfReading](file.slice(this.#start, this.#stop));
+    }
+}
+
+class FileStreamReaderAsyncPromise {
+
+    validate = params => new Promise((resolve, reject) => {
+        if (!params.chunkSize) {
+            reject("Chunk size should exists and not be equals to zero!");
+        }
+        if (!params.file) {
+            reject("Chunk size should exists and not be equals to zero!");
+        }
+        if (!params.typeOfReading) {
+            reject("Type of reading should exists!");
+        }
+        if (!Object.values(readTypes).includes(params.typeOfReading)) {
+            reject("Incorrect type of reading!");
+        }
+        if (params.file.size < params.chunkSize) {
+            params.chunkSize = params.file.size;
+        }
+        params.start = 0;
+        params.stop = params.chunkSize;
+        params.step = params.chunkSize;
+        resolve(params);
+    });
+
+    read(params) {
+        const fileReader = new FileReader();
+        return new Promise(function next(resolve, reject) {
+            fileReader.onloadend = event => {
+                if (params.onLoadChunkCallback) {
+                    params.onLoadChunkCallback(params.file, event);
+                }
+                params.start += params.step;
+                params.stop += params.step;
+                if (params.start >= params.file.size) {
+                    if (params.onLoadFileCallback) {
+                        params.onLoadFileCallback(params.file);
+                    }
+                    resolve(params.file);
+                } else {
+                    next(resolve, reject);
+                }
+            };
+            fileReader[params.typeOfReading](params.file.slice(params.start, params.stop));
+        });
     }
 }
