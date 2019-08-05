@@ -5,6 +5,8 @@ import {bindActionCreators} from 'redux';
 import {onDropFiles} from '../../actions/fileActions';
 import Main from './Main';
 import Preloader from '../Preloader/Preloader';
+import * as appConstants from '../../constants/appConstants';
+import * as colors from '../../constants/colors';
 
 class MainContainer extends Component {
 
@@ -16,7 +18,8 @@ class MainContainer extends Component {
     getPreloaderComponent() {
         const {preloader} = this.props;
         if (preloader.showPreloader) {
-            return <Preloader/>
+            return <Preloader size={appConstants.PRELOADER_SIZE}
+                              colors={colors}/>
         }
     }
 
