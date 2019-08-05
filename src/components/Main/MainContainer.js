@@ -19,7 +19,7 @@ class MainContainer extends Component {
         const {preloader} = this.props;
         if (preloader.showPreloader) {
             return <Preloader size={appConstants.PRELOADER_SIZE}
-                              colors={colors}/>
+                              colors={colors.preloaderColors}/>
         }
     }
 

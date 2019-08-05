@@ -10,17 +10,17 @@ const Preloader = props => {
         <div id={"Preloader"}
              className={styles.Preloader}>
             <MDSpinner size={size}
-                       color1={colors.preloaderColors[0]}
-                       color2={colors.preloaderColors[1]}
-                       color3={colors.preloaderColors[2]}
-                       color4={colors.preloaderColors[3]}/>
+                       color1={colors[0]}
+                       color2={colors[1]}
+                       color3={colors[2]}
+                       color4={colors[3]}/>
         </div>
     );
 };
 
 Preloader.propTypes = {
     size: PropTypes.number.isRequired,
-    colors: PropTypes.object.isRequired
+    colors: PropTypes.array.isRequired
 };
 
 export default Preloader;
