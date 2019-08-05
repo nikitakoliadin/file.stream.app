@@ -6,36 +6,25 @@ import * as appConstants from '../constants/appConstants';
 
 export const onDropFiles = (acceptedFiles, rejectedFiles) => dispatch => {
     dispatch(startPreloader());
+    acceptedFiles.sort((leftFile, rightFile) => leftFile.size - rightFile.size);
     dispatch(startFilesProcessing({acceptedFiles, rejectedFiles}));
     try {
         acceptedFiles.forEach((file, index) => {
-            if (index !== acceptedFiles.length - 1) {
-                const fileStream = new FileStream(appConstants.TEN_MEGABYTES);
-                fileStream.readAsync(
-                    file,
-                    readTypes.AS_TEXT,
-                    file => {
-                        console.log("File is loaded:", file);
-                    },
-                    (file, event) => {
-                        console.log("File is loading:", file.name, "Loaded chunk size:", event.loaded, "bytes");
-                    }
-                );
-            } else {
-                const fileStream = new FileStream(appConstants.TEN_MEGABYTES);
-                fileStream.readAsync(
-                    file,
-                    readTypes.AS_TEXT,
-                    file => {
-                        console.log("File is loaded:", file);
+            const fileStream = new FileStream(appConstants.TEN_MEGABYTES);
+            fileStream.readAsync(
+                file,
+                readTypes.AS_TEXT,
+                file => {
+                    console.log("File is loaded:", file);
+                    if (index === acceptedFiles.length - 1) {
                         dispatch(finishFilesProcessing());
                         dispatch(finishPreloader());
-                    },
-                    (file, event) => {
-                        console.log("File is loading:", file.name, "Loaded chunk size:", event.loaded, "bytes");
                     }
-                );
-            }
+                },
+                (file, event) => {
+                    console.log("File is loading:", file.name, "Loaded chunk size:", event.loaded, "bytes");
+                }
+            );
         });
     } catch (e) {
         dispatch(finishFilesProcessing());
