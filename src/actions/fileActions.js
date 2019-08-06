@@ -16,13 +16,21 @@ export const onDropFiles = (acceptedFiles, rejectedFiles) => dispatch => {
                 readTypes.AS_TEXT,
                 file => {
                     dispatch(fileIsLoaded(file));
-                    if (index === acceptedFiles.length - 1) {
-                        dispatch(finishFilesProcessing());
-                        dispatch(finishPreloader());
-                    }
+                    fileStream.close(file => {
+                        dispatch(fileIsWritten(file));
+                        if (index === acceptedFiles.length - 1) {
+                            dispatch(finishFilesProcessing());
+                            dispatch(finishPreloader());
+                        }
+                    });
                 },
                 (file, event) => {
                     console.log("File is loading:", file.name, "Loaded chunk size:", event.loaded, "bytes");
+                    fileStream.writeAsync(
+                        file,
+                        event,
+                        (file, data) => console.log("File is writing:", file.name)
+                    );
                 }
             );
         });
