@@ -47,6 +47,13 @@ const fileIsLoaded = file => {
     }
 };
 
+const fileIsWritten = file => {
+    return {
+        type: types.FILE_IS_WRITTEN_TYPE,
+        payload: file
+    }
+};
+
 const finishFilesProcessing = () => {
     return {
         type: types.FINISH_FILES_PROCESSING_TYPE
