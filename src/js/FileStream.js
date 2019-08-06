@@ -1,3 +1,5 @@
+import streamSaver from 'streamsaver';
+
 export const readTypes = {
     AS_BINARY_STRING: "readAsBinaryString",
     AS_TEXT: "readAsText",
@@ -8,6 +10,7 @@ export const readTypes = {
 export class FileStream {
 
     #chunkSize;
+    #fileStreamWriterAsync;
 
     constructor(chunkSize) {
         this.#chunkSize = chunkSize;
@@ -48,6 +51,25 @@ export class FileStream {
         return fileStreamReaderAsyncPromise
             .validate(params)
             .then(params => fileStreamReaderAsyncPromise.read(params));
+    }
+
+    writeAsync(file, chunk, onWriteChunkCallback) {
+        if (!file) {
+            throw new FileStreamException("File should exists!");
+        }
+        if (!chunk) {
+            throw new FileStreamException("Chunk should exists!");
+        }
+        if (!this.#fileStreamWriterAsync) {
+            this.#fileStreamWriterAsync = new FileStreamWriterAsync(file);
+        }
+        this.#fileStreamWriterAsync.write(chunk, onWriteChunkCallback);
+    }
+
+    close(onWriteFileCallback) {
+        if (this.#fileStreamWriterAsync) {
+            this.#fileStreamWriterAsync.close(onWriteFileCallback);
+        }
     }
 }
 
@@ -143,5 +165,42 @@ class FileStreamReaderAsyncPromise {
             };
             fileReader[params.typeOfReading](params.file.slice(params.start, params.stop));
         });
+    }
+}
+
+class FileStreamWriterAsync {
+
+    #file;
+    #writer;
+    #encode;
+
+    constructor(file) {
+        this.#file = file;
+        const fileStream = streamSaver.createWriteStream(this.#file.name);
+        this.#writer = fileStream.getWriter();
+        this.#encode = TextEncoder.prototype.encode.bind(new TextEncoder());
+        window.isSecureContext && window.addEventListener("beforeunload", this.#onExitPage);
+    }
+
+    #onExitPage = () => {
+        this.#writer.abort();
+    };
+
+    write(chunk, onWriteChunkCallback) {
+        const data = this.#encode(chunk.target.result);
+        data && this.#writer.write(data);
+        if (onWriteChunkCallback) {
+            onWriteChunkCallback(this.#file, data);
+        }
+    }
+
+    close(onWriteFileCallback) {
+        if (this.#writer) {
+            this.#writer.close();
+        }
+        window.removeEventListener("beforeunload", this.#onExitPage);
+        if (onWriteFileCallback) {
+            onWriteFileCallback(this.#file);
+        }
     }
 }
