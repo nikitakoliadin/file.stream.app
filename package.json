@@ -51,6 +51,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "source-map-explorer": "^2.0.1",
+    "streamsaver": "^2.0.3",
     "terser": "3.14.1"
   },
   "devDependencies": {
