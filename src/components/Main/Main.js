@@ -14,7 +14,8 @@ const Main = props => {
             <ChunkPicker chunkPicker={chunkPicker}
                          chunkSizeValues={chunkSizeValues}
                          setChunkSize={setChunkSize}/>
-            <DropZone onDropFiles={onDropFiles}/>
+            <DropZone chunkPicker={chunkPicker}
+                      onDropFiles={onDropFiles}/>
         </div>
     );
 };
