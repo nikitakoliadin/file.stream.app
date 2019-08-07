@@ -12,8 +12,9 @@ class DropZone extends Component {
     }
 
     handleOnDrop(acceptedFiles, rejectedFiles) {
+        const {chunkPicker} = this.props;
         const {onDropFiles} = this.props;
-        onDropFiles(acceptedFiles, rejectedFiles);
+        onDropFiles(acceptedFiles, rejectedFiles, chunkPicker.chunkSize);
     }
 
     render() {
@@ -30,6 +31,7 @@ class DropZone extends Component {
 }
 
 DropZone.propTypes = {
+    chunkPicker: PropTypes.object.isRequired,
     onDropFiles: PropTypes.func.isRequired
 };
 
