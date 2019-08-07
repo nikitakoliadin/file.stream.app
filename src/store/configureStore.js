@@ -15,7 +15,9 @@ const configureStore = () => {
     const router = routerMiddleware(browserHistory);
     const store = createStore(reducers, persistedState, composeWithDevTools(applyMiddleware(thunk, logger, router)));
     store.subscribe(throttle(() => {
-        saveState({});
+        saveState({
+            chunkPicker: store.getState().chunkPicker
+        });
     }, 1000));
     if (process.env.NODE_ENV !== "production") {
         if (module.hot) {
