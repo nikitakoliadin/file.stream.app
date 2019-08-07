@@ -2,15 +2,14 @@ import * as types from '../constants/actionTypes';
 
 import {startPreloader, finishPreloader} from './preloaderActions';
 import {FileStream, readTypes} from '../js/FileStream';
-import * as appConstants from '../constants/appConstants';
 
-export const onDropFiles = (acceptedFiles, rejectedFiles) => dispatch => {
+export const onDropFiles = (acceptedFiles, rejectedFiles, chunkSize) => dispatch => {
     dispatch(startPreloader());
     acceptedFiles.sort((leftFile, rightFile) => leftFile.size - rightFile.size);
     dispatch(startFilesProcessing({acceptedFiles, rejectedFiles}));
     try {
         acceptedFiles.forEach((file, index) => {
-            const fileStream = new FileStream(appConstants.TEN_MEGABYTES);
+            const fileStream = new FileStream(chunkSize);
             fileStream.readAsync(
                 file,
                 readTypes.AS_TEXT,
