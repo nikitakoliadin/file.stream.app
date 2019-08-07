@@ -25,9 +25,9 @@
 }
 
 .DropZone .Dropzone:hover {
-    color: red;
+    color: #f50057;
     background-color: white;
-    border: 5px dashed red;
+    border: 5px dashed #f50057;
 }
 
 .DropZone .Dropzone input[type="file"] {
